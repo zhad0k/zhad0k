@@ -1,0 +1,26 @@
+Database Lab1
+1.6. List four applications you have used that most likely employed a database system to store persistent data. 
+Here is a banking , which handles account information, money transfers, and other financial operations; the second is a database of universities, which houses student data and registration for different disciplines. Airlines are the third, and they keep information on schedules, reservations for tickets, and registrations for aircraft. The last option is internet commerce, which stores all product information, including pricing and specifications.
+1.7. List four significant differences between a file-processing system and a DBMS.
+1) Both a DBMS and a file-processing system contain a set of applications that may access a collection of data; however, a DBMS gives both logical and physical access to the data, whilst a file-processing system only coordinates the former.
+2) Unlike file-processing systems, where data entered by one program may not be legible by another program, databases ensure that a physical item of data is accessible to all applications permitted to access it, reducing the amount of data duplication.
+
+3) A DBMS is made to give flexible access to data, whereas a file-processing system is made to allow pre-determined access to data.4) Purpose of a DBMS is to coordinate multiple users accessing the same data at the same time. A file-processing system is usually designed to allow one or more programs to access different data files at the same time. In a file-processing system, a file can be accessed by two programs concurrently only if both programs have read-only access to the file.
+
+4) A DBMS's main function is to manage concurrent access by many users to the same data. A file-processing system is often made to provide simultaneous access to several data files by one or more programs. A file can only be viewed by two applications at once in a file-processing system if both have read-only access to it.
+
+1.8. Explain the concept of physical data independence and its importance in database systems.
+he ability to change the physical scheme without having to rewrite application programs is known as physical data independence. Such adjustments can involve adding a field to a record or switching from sequential to random access files. This modification is concealed from the program by an application program's perspective.
+1.9. List five responsibilities of a database-management system. For each responsibility, explain the problems that would arise if the responsibility were not discharged
+1) File manager interaction: This is the only thing a DBMS can accomplish. If there is no interaction with the file manager, the files cannot be stored or retrieved.
+2) Integrity enforcement: Constraints on consistency might not be met. Two students using the same ID, account balances falling below the minimum allowable, and other scenarios are only a few examples.
+3) Enforcing security: Unauthorized users may access the database, demonstrating their lack of permission. may, for instance, learn how much their managers make.
+4) Backup and recovery: Instead of at least being accessible in a consistent state that existed before to a failure, data may be lost forever.
+5) Concurrency control: Constraints on consistency may be broken even though each transaction's integrity is properly upheld.
+1.11. Assume that two students are trying to register for a course in which there is only one open seat. What component of a database system prevents both students from being given that last seat?
+The element is a "before" trigger. It is a unique kind of store procedure that launches on its own whenever an event takes place in the database server. When a user attempts to edit data using a data manipulation language (DML) event, DML triggers are activated. DML operations are statements that INSERT, UPDATE, or DELETE data from a table or view.
+1.15. Describe at least three tables that might be used to store information in a social networking system such as Facebook.
+The first is a table of users, which will include people with attributes like username, last name, age, gender, and so on.
+The second is a table of information that users may provide by utilizing text, photos, and other media.
+The third is the friend's table, which will keep track of every user. It will therefore display the relationship between users.
+The fourth one is the passwords table, which will include login information and passwords for people who have already registered.
