@@ -1,0 +1,43 @@
+Lab 2
+Dauen Zhadyra
+
+employee (ID, person_name, street, city)
+works (ID, company_name, salary)
+company (company_name, city) 
+
+
+Task 1
+П ID, person_name (employee ⋈ (σ company_name = "BigBank"(works)) 
+
+П ID, person_name, city(employee ⋈ (σ company_name = 'BigBank'(works))
+
+П ID, person_name, street, city(σ company_name = "BigBank" " ∧  salary > $10000 (employee × works))
+
+П ID, person_name(employee ⋈ works ⋈ company=city) ))
+
+Task 2
+П ID, person_name (employee ⋈  company_name ≠ "BigBank"(employee × works)) 
+
+П ID, person_name (works) − (П  person_name (works ⋈ (1.salary ≤ 2.salary ∧ 2.company = 'BigBank')
+
+Task 3
+ 
+ 
+
+Instructor:
+Inserting a tuple: (ID,name,dept_name,salary)
+Inserting a tuple: (22222, Einstein, Physics, 95000)
+Student:
+Deleting the tuple:( ID,name,dept_name,tot_cred)
+Deleting the tuple:(12121,Finance, Wu, 90000)
+Instructor table:
+into the instructor table, where the department table does not have the department Physcis, would violate the foreign key constant .
+from the student table, where  a student tuple has dept_name as Finance, would violate the foreign key constraint .
+Task 4
+ID, person_name, dept_name, salary
+
+employee( person_name, street, city)
+works(person_name, company_name, salary)
+company(company_name, city)
+
+
