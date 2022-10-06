@@ -1,0 +1,149 @@
+Laboratory work 3
+1.Difference between DDL and DML 
+1)
+DDL (Data Definition Language)-We use to create database schema in more detail DDL generates data dictionary containing: metadata, Database  schema, integrity constraints, authorization. DDL statements create, modify, remove like tables, indexes and others.
+DML (Data Manipulation Language)-DML is type of sql used to manipulate the existing database. We can use it for updating and accessing the data organized and also extracting, adding the data.
+2)
+DDL general statements are ALTER,CREATE,DROP and RENAME.
+DML general statements are INSERT,UPDATE,CALL,LOCK and MERGE.
+3)
+DDL sql statements can’t perform rolling back
+DML sql statements can be perform rolling back
+4)
+DDL  there is no other classification
+DML there have other classifications into Procedural and Non-Procedural
+5)
+DDL defines the column named as like attribute of the table
+DML update or adds the row of the table so these rows named as like tuple
+6)
+DDL we can not use “where” clause in its statements as it’s accepted like that
+DML but here we can use “where” clause in statements as it’s accepted like that
+2.Write SQL statements to create tables in the figure below: 
+drop database university;
+create database university;
+drop table customers;
+create table  customers (
+    id integer,
+    full_name varchar(50),
+    timestamp timestamp ,
+    delivery_address text,
+    PRIMARY KEY(id)
+
+);
+drop table orders;
+create table orders(
+    code integer,
+    customer_id integer,
+    total_sum double precision ,
+    is_paid boolean,
+    PRIMARY KEY(code),
+    foreign key (customer_id) references customers(id)
+);
+
+drop table products;
+create table products (
+id varchar,
+name varchar,
+description text ,
+price double precision,
+PRIMARY KEY(id)
+);
+drop table order_items;
+create table order_items (
+    order_code integer,
+    product_id varchar,
+    quantity integer,
+   PRIMARY KEY(order_code,product_id),
+    foreign key (order_code) references orders(code),
+    foreign key(product_id) references products(id)
+);
+
+drop table customers;
+create table  customers (
+    id integer,
+    full_name varchar(50),
+    timestamp timestamp ,
+    delivery_address text,
+    PRIMARY KEY(id)
+
+);
+drop table orders;
+create table orders(
+    code integer,
+    customer_id integer,
+    total_sum double precision ,
+    is_paid boolean,
+    PRIMARY KEY(code),
+    foreign key (customer_id) references customers(id)
+);
+
+drop table products;
+create table products (
+id varchar,
+name varchar,
+description text ,
+price double precision,
+PRIMARY KEY(id)
+);
+drop table order_items;
+create table order_items (
+    order_code integer,
+    product_id varchar,
+    quantity integer,
+   PRIMARY KEY(order_code,product_id),
+    foreign key (order_code) references orders(code),
+    foreign key(product_id) references products(id)
+);
+
+
+3.Write SQL statements describing tables with appropriate data types and constraints satisfying the following conditions(maybe you need additional tables to store data atomically and efficiently): 
+
+Drop database Zhadyra;
+create database Zhadyra;
+CREATE TYPE  gende AS ENUM ('M','F');
+create table student(
+    id integer,
+    full_name character varying(30),
+    age integer,
+    birth_date date,
+    gender gende,
+    average_grade integer
+    CONSTRAINT grade CHECK
+        (average_grade>0 and average_grade<100),
+    social_category character varying(30),
+    phone_number varchar(11),
+    constraint student_pkeyy primary key(id)
+);
+create table instructor(
+    id integer REFERENCES student(id),
+    full_name character varying(30) REFERENCES student(full_name),
+    speaking_language character varying(20),
+    work_experience varchar(30),
+    possibility_of_remote_lessons boolean,
+    constraint student_pkeyy primary key(id)
+);
+create table  shedule(
+  id integer REFERENCES student(id),
+  lesson_title character varying(20),
+  teacher character varying (20),
+  studying_students integer,
+  room_number integer,
+  constraint student_pkeyy primary key(id)
+);
+
+
+4. Give examples of insertion, update and deletion of data on tables from exercise 2
+insert into customers (id, full_name, timestamp, delivery_address)
+VALUES (‘21053009’,‘Dauen Zhadyra Berikkyzy’, ‘2004-03-18 10:23:54+02’ ,‘ul Abay 5’),
+       (‘21097784’,‘Sarsen Daulet Gani’,‘2001-11-28 09:20:45+02’ ‘ul Auezov 12’);
+
+UPDATE customers
+SET delivery_address = ‘ul. Abay,d.5’ 
+WHERE  delivery_address =‘ul.Auezov,d.12’;
+
+DELETE FROM customers
+WHERE id= '21089903';
+
+select * from customers;
+
+
