@@ -1,0 +1,96 @@
+select title,credits
+from course
+where credits>3;
+
+select room_number,building
+from  classroom
+where building='Watson' or building='Packard';
+
+
+select title,dept_name
+from course
+where dept_name='Comp. Sci.';
+
+select title , semester
+from course
+inner join section on course.course_id=section.course_id
+where semester='Fall';
+
+select name,tot_cred
+from student
+where tot_cred>45 and tot_cred<90;
+
+select name
+from student
+where right(name,1)='a' or right(name,1)='i' or right(name,1)='o' or right(name,1)='e' or right(name,1)='y' or right(name,1)='u';
+
+select title,prereq_id
+from  course
+inner join prereq on course.course_id=prereq.course_id
+where prereq_id='CS-101';
+
+select dept_name,AVG(salary) as ave
+from instructor
+group by dept_name
+order by ave;
+
+select building,count(course_id) as cnt
+from section
+group by building
+order by cnt desc
+limit 1;
+
+SELECT department.dept_name, count(course.course_id) as numbers
+from course, department
+WHERE course.dept_name = department.dept_name
+group by department.dept_name
+ORDER BY count(course.course_id);
+SELECT dept_name, count(course_id)
+from course group by dept_name having count(course_id) = (SELECT min(counters)
+from (select count(course_id) as counters
+from course group by dept_name) as minis);
+
+SELECT ID, name
+from student
+WHERE ID in
+(select ID from (select ID, count(1) cnt from takes
+WHERE course_id
+like 'CS%' group by ID) as n
+WHERE cnt > 3);
+
+select name,dept_name
+from instructor
+where dept_name='Biology' or dept_name='Philosophy' or dept_name='Music';
+
+select name,year
+from instructor inner join teaches on instructor.id=teaches.id
+where year=2018 and not year=2017;
+
+select name,grade
+from student inner join takes on student.id=takes.id
+where course_id='CS-101'
+ and (grade='A' or grade='A-')
+group by name,grade
+order by name;
+
+select INS.name,takes.grade
+from advisor inner join student as s on  s.id=advisor.s_id
+inner join takes on advisor.s_id=takes.id
+inner join instructor as INS on advisor.i_id=INS.id
+where not( grade='A' or grade='A-' or grade='B+' or grade='B')
+group by INS.name,takes.grade;
+
+select all dept_name
+from student
+inner join takes on student.id=takes.id
+where not(grade='F' or grade='C');
+
+select all name
+from instructor inner join teaches on instructor.id=teaches.id
+inner join takes on teaches.course_id=takes.course_id
+where not grade='A';
+
+select course.title,end_hr
+from section inner join time_slot on section.time_slot_id=time_slot.time_slot_id
+inner join course on course.course_id=section.course_id
+where end_hr <13;
