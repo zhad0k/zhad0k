@@ -1,0 +1,237 @@
+--1
+--a
+CREATE or replace  FUNCTION inc(val integer) RETURNS integer AS
+$$
+BEGIN
+    RETURN val + 1;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+SELECT inc(4);
+--b
+CREATE or replace  FUNCTION sum(a integer,b integer) RETURNS integer AS
+$$
+BEGIN
+    RETURN a + b;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+SELECT sum(10,11);
+--c
+CREATE FUNCTION d(n integer) RETURNS boolean AS
+$$
+BEGIN
+    if n % 2 = 0 then RETURN True;
+    else RETURN False;
+    end if;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+SELECT d(8);
+--d
+CREATE FUNCTION valid(p varchar) RETURNS boolean AS
+$$
+BEGIN
+    if LENGTH(p) > 6 then
+    RETURN True;
+    else
+    RETURN False;
+    end if;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+SELECT valid('kdqqx');
+--e
+CREATE FUNCTION show(a numeric, OUT square numeric, OUT cube numeric) AS
+$$
+BEGIN
+    square = a * a;
+    cube = square * a;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+SELECT * from show(3);
+--2
+--a
+CREATE TABLE tab1
+(   day   varchar,
+    cur_time   timestamp,
+    future_time timestamp
+);
+CREATE FUNCTION actual()  RETURNS trigger AS
+$$
+DECLARE
+    w timestamp;
+BEGIN
+    w=current_timestamp;
+    new.future_time = w;
+    RETURN new;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+CREATE trigger actual_trig
+BEFORE UPDATE ON tab1
+FOR EACH ROW
+EXECUTE PROCEDURE actual();
+
+INSERT INTO tab1(day, cur_time)
+VALUES ('Sanday', current_timestamp);
+
+SELECT *
+FROM tab1;
+UPDATE tab1
+SET day = 'Monday'
+WHERE day = 'Sanday';
+
+SELECT *
+FROM tab1;
+
+--b
+CREATE TABLE tab2(
+     date_of_birth date,
+     age integer default 0
+);
+
+CREATE FUNCTION ageper() RETURNS trigger AS
+$$
+BEGIN
+    UPDATE tab2
+    SET age = now() - date_of_birth
+    WHERE date_of_birth is not null;
+    RETURN new;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+CREATE trigger ageper_trig
+AFTER INSERT OR UPDATE ON tab2
+FOR EACH ROW
+EXECUTE PROCEDURE ageper();
+
+INSERT into tab2
+VALUES ('2009-04-12 07:10:02.5');
+
+SELECT * FROM tab2;
+
+--c
+CREATE FUNCTION tax() RETURNS trigger AS
+$$
+BEGIN
+UPDATE tab3
+    set cost = cost * 1.12;
+    RETURN new;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+CREATE TABLE tab3(
+cost float not null );
+
+CREATE trigger tax_trig
+BEFORE INSERT ON tab3
+FOR EACH ROW
+EXECUTE PROCEDURE tax();
+
+INSERT into tab3
+VALUES (500.5);
+
+SELECT * FROM tab3;
+
+--d
+CREATE TABLE tab4();
+
+CREATE FUNCTION prev() RETURNS trigger AS
+$$
+BEGIN
+    raise exception 'Deletion is not allowed';
+END;
+$$
+LANGUAGE PLPGSQL;
+
+CREATE trigger prev_trig
+BEFORE DELETE ON tab4
+EXECUTE PROCEDURE prev();
+
+--e
+CREATE TABLE tab5(
+    p1 varchar,
+    a1 numeric
+);
+CREATE FUNCTION launch()  RETURNS trigger AS
+$$
+BEGIN
+    raise notice '%', valid(new.p1);
+    raise notice '%', show(new.a1);
+    RETURN new;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+CREATE trigger launch_trig
+BEFORE INSERT ON tab5
+FOR EACH ROW
+EXECUTE PROCEDURE launch();
+
+--3
+CREATE TABLE task4(id integer, name varchar, date_of_birth date, age integer, salary numeric,
+ workexperience integer, discount numeric);
+--a
+CREATE OR REPLACE PROCEDURE
+    a (year integer,salary integer, out salaryy integer, out discount numeric) AS
+$$
+DECLARE
+    x integer;
+BEGIN
+    WHILE year>=0
+    loop
+    if x%2 =0 then
+    salaryy = salary * 0.1+salary;
+    discount = salaryy * 0.1;
+    end if;
+        if x % 5 = 0 then
+        discount= discount *0.01+discount;
+        end if;
+        x=x+1;
+        end loop;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+INSERT into task4 VALUES(id, name, date_of_birth, age, salary, workexperience, discount);
+
+SELECT * FROM a (1, '1000');
+
+--b
+CREATE OR REPLACE PROCEDURE
+    b ( age integer, inout salary numeric,workexperience integer, out discount numeric) AS
+$$
+DECLARE
+    count integer;
+BEGIN
+    if age >= 40 then salary = salary * 1.15;
+    end if;
+    discount = 10;
+    count = workexperience/2;
+  for step in 1..count loop
+        salary = salary * 1.1;
+   end loop;
+   count = workexperience/5;
+   for step in 1..count loop
+     discount = discount * 1.01;
+    end loop;
+    if workexperience > 8 then salary = salary * 1.15;
+    end if;
+    if workexperience > 8 then discount = 20;
+    end if;
+    INSERT into task4 VALUES(id, name, date_of_birth, age, salary, workexperience, discount);
+END;
+$$
+LANGUAGE PLPGSQL;
+
+SELECT * FROM b (2, '1000', '2004-09-22');
